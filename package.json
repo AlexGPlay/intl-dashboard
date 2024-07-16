@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node index.js",
-    "dev": "nodemon ./app/adapter/rest/index.ts"
+    "dev": "nodemon ./app/adapter/index.ts"
   },
   "keywords": [],
   "author": "",

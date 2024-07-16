@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 
-export default function (server: FastifyInstance) {
+export function fastifyHandler(server: FastifyInstance) {
   server.get("/ping", async (request, reply) => {
     return { ping: "pong" };
   });

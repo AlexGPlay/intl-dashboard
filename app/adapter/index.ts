@@ -22,10 +22,10 @@ while (dirQueue.length > 0) {
       continue;
     }
     const module = require(moduleDir);
-    if (!module.default) {
+    if (!module.fastifyHandler) {
       continue;
     }
-    module.default(server);
+    module.fastifyHandler(server);
   }
 }
 
