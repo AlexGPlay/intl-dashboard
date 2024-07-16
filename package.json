@@ -6,18 +6,22 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node index.js",
-    "dev": "nodemon ./app/adapter/index.ts"
+    "dev": "nodemon ./app/adapter/index.ts",
+    "migrate": "ts-node ./app/infrastructure/migrations/migrate.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.14.10",
+    "@types/uuid": "^10.0.0",
     "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
   },
   "dependencies": {
-    "fastify": "^4.28.1"
+    "fastify": "^4.28.1",
+    "sqlite3": "^5.1.7",
+    "uuid": "^10.0.0"
   }
 }
