@@ -14,9 +14,17 @@ while (dirQueue.length > 0) {
     break;
   }
 
-  const files = fs.readdirSync(dir).filter((file) => file !== "index.ts");
+  const files = fs.readdirSync(dir).filter((file) => {
+    if (file === "index.ts") return false;
+    if (file.endsWith(".ts")) return true;
+
+    const stat = fs.statSync(path.join(dir, file));
+    return stat.isDirectory();
+  });
+
   for (const file of files) {
     const moduleDir = path.join(dir, file);
+
     if (fs.statSync(moduleDir).isDirectory()) {
       dirQueue.push(moduleDir);
       continue;
