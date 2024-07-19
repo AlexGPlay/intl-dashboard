@@ -6,7 +6,7 @@ type ProjectRow = {
   name: string;
 };
 
-class ProjectRepository extends SqliteRepository {
+class ProjectsRepository extends SqliteRepository {
   getProjects(): Promise<Project[]> {
     return new Promise((resolve, reject) => {
       this.db.all<ProjectRow>("SELECT * FROM projects", (err, rows) => {
@@ -59,4 +59,4 @@ class ProjectRepository extends SqliteRepository {
   }
 }
 
-export default ProjectRepository;
+export default ProjectsRepository;
