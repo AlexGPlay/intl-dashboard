@@ -20,6 +20,24 @@ class ProjectRepository extends SqliteRepository {
     });
   }
 
+  getProjectById(id: string): Promise<Project | null> {
+    return new Promise((resolve, reject) => {
+      this.db.get<ProjectRow>(
+        "SELECT * FROM projects WHERE id = ?",
+        [id],
+        (err, row) => {
+          if (err) {
+            reject(err);
+          } else if (row) {
+            resolve(this.toDomain(row));
+          } else {
+            resolve(null);
+          }
+        }
+      );
+    });
+  }
+
   createProject(project: Project): Promise<Project> {
     return new Promise((resolve, reject) => {
       this.db.run(

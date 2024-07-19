@@ -6,6 +6,12 @@ class ProjectsQueryService {
     const projects = await repository.getProjects();
     return projects;
   }
+
+  static async getProjectById(id: string) {
+    const repository = new ProjectRepository();
+    const project = await repository.getProjectById(id);
+    return project;
+  }
 }
 
 export default ProjectsQueryService;

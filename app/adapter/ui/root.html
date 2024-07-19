@@ -18,7 +18,7 @@
     </dialog>
     <ul>
       <% projects.forEach(project => { %>
-      <li><%= project.name %></li>
+      <li><a href="/projects/<%= project.id %>"><%= project.name %></a></li>
       <% }); %>
     </ul>
   </body>
