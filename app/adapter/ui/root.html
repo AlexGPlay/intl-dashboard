@@ -5,9 +5,45 @@
     <title>Projects</title>
   </head>
   <body>
-    <div>Projects</div>
+    <div style="display: flex">
+      <div>Projects</div>
+      <button id="new-project">New project</button>
+    </div>
+    <dialog id="new-project-modal">
+      <form id="new-project-form">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" />
+        <button type="submit">Create</button>
+      </form>
+    </dialog>
     <ul>
-      <li><% projects.forEach(project => { %> <%= project.name %> <% }); %></li>
+      <% projects.forEach(project => { %>
+      <li><%= project.name %></li>
+      <% }); %>
     </ul>
   </body>
+  <script>
+    document.getElementById("new-project").addEventListener("click", () => {
+      document.getElementById("new-project-modal").showModal();
+    });
+
+    document
+      .getElementById("new-project-form")
+      .addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const name = formData.get("name");
+
+        fetch("/projects/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name }),
+        }).then(() => {
+          window.location.reload();
+        });
+      });
+  </script>
 </html>
