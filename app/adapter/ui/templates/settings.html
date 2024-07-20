@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings</title>
+  </head>
+  <body>
+    <h1>Settings</h1>
+    <ul>
+      <% languageSettings.forEach(setting => { %>
+      <li>
+        <%= languageNameFormatter.of(setting.language) %> <%
+        if(setting.isDefault){ %>
+        <span>(default)</span>
+        <% } else { %>
+        <button onclick="setLanguageAsDefault('<%= setting.language %>')">
+          Set as default
+        </button>
+        <% } %>
+        <button onclick="deleteLanguageSetting('<%= setting.language %>')">
+          Delete
+        </button>
+      </li>
+      <% }); %>
+    </ul>
+    <button
+      onclick="document.getElementById('create-language-setting-dialog').showModal()"
+    >
+      Add new
+    </button>
+    <dialog id="create-language-setting-dialog">
+      <form onsubmit="submitCreateLanguageSettingForm(event)">
+        <label for="language">Language</label>
+        <input type="text" id="language" name="language" />
+        <button type="submit">Add</button>
+      </form>
+    </dialog>
+  </body>
+  <script>
+    function setLanguageAsDefault(language) {
+      fetch(`/language_settings/${language}/set_default`, {
+        method: "POST",
+      }).then(() => {
+        window.location.reload();
+      });
+    }
+
+    function deleteLanguageSetting(language) {
+      fetch(`/language_settings/${language}`, {
+        method: "DELETE",
+      }).then(() => {
+        window.location.reload();
+      });
+    }
+
+    function submitCreateLanguageSettingForm(event) {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const language = formData.get("language");
+
+      fetch("/language_settings/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ language }),
+      }).then(() => {
+        window.location.reload();
+      });
+    }
+  </script>
+</html>

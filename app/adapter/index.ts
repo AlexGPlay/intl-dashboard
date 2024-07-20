@@ -4,7 +4,7 @@ import path from "path";
 
 const GLOBAL_DIR = path.join(__dirname);
 
-const server = fastify();
+const server = fastify({ logger: true });
 
 const dirQueue = [GLOBAL_DIR];
 
@@ -33,6 +33,7 @@ while (dirQueue.length > 0) {
     if (!module.fastifyHandler) {
       continue;
     }
+    console.log(`Loading module ${moduleDir}`);
     module.fastifyHandler(server);
   }
 }

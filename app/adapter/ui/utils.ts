@@ -8,7 +8,7 @@ export function replyWithHtml(
   templatePath: string,
   templateData: Record<string, unknown>
 ) {
-  const filePath = path.join(__dirname, templatePath);
+  const filePath = path.join(__dirname, "templates", templatePath);
   const htmlData = fs.readFileSync(filePath, "utf8");
   return reply.type("text/html").send(ejs.render(htmlData, templateData));
 }

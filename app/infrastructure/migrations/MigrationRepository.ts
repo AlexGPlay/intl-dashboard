@@ -1,7 +1,11 @@
 import SqliteRepository from "../SqliteRepository";
 
-class MigrationRepository extends SqliteRepository {
+class MigrationRepository extends SqliteRepository<
+  Record<string, unknown>,
+  unknown
+> {
   filename: string;
+  tableName = "THERE IS NO TABLE";
 
   constructor(filename: string) {
     super();
@@ -49,6 +53,16 @@ class MigrationRepository extends SqliteRepository {
 
   run() {
     throw new Error("Implement your migration here");
+  }
+
+  toDomain(row: unknown): unknown {
+    // We don't need this here
+    throw new Error("Method not implemented.");
+  }
+
+  toItem(domain: unknown): Record<string, unknown> {
+    // We don't need this here
+    throw new Error("Method not implemented.");
   }
 }
 

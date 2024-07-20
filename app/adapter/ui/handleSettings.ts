@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import LanguageSettingsQueryService from "../../application/LanguageSettingsQueryService";
+import { replyWithHtml } from "./utils";
 
 export function fastifyHandler(server: FastifyInstance) {
   server.get("/settings", async (request, reply) => {
@@ -10,20 +11,9 @@ export function fastifyHandler(server: FastifyInstance) {
       type: "language",
     });
 
-    reply.type("text/html").send(`
-      <div>
-        Enabled languages:
-        <ul>
-          ${languageSettings
-            .map(
-              (language) =>
-                `<li>${languageNameFormatter.of(language.language)} ${
-                  language.isDefault ? "<span>(Default)</span>" : ""
-                }</li>`
-            )
-            .join("")}
-        </ul>
-      </div>
-    `);
+    replyWithHtml(reply, "settings.html", {
+      languageSettings,
+      languageNameFormatter,
+    });
   });
 }

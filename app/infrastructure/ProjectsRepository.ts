@@ -6,56 +6,30 @@ type ProjectRow = {
   name: string;
 };
 
-class ProjectsRepository extends SqliteRepository {
+class ProjectsRepository extends SqliteRepository<ProjectRow, Project> {
+  tableName = "projects";
+
   getProjects(): Promise<Project[]> {
-    return new Promise((resolve, reject) => {
-      this.db.all<ProjectRow>("SELECT * FROM projects", (err, rows) => {
-        if (err) {
-          reject(err);
-        } else {
-          const projects = rows.map((row) => this.toDomain(row));
-          resolve(projects);
-        }
-      });
-    });
+    return this.getAll();
   }
 
   getProjectById(id: string): Promise<Project | null> {
-    return new Promise((resolve, reject) => {
-      this.db.get<ProjectRow>(
-        "SELECT * FROM projects WHERE id = ?",
-        [id],
-        (err, row) => {
-          if (err) {
-            reject(err);
-          } else if (row) {
-            resolve(this.toDomain(row));
-          } else {
-            resolve(null);
-          }
-        }
-      );
-    });
+    return this.getOneByKeyAndValue("id", id);
   }
 
   createProject(project: Project): Promise<Project> {
-    return new Promise((resolve, reject) => {
-      this.db.run(
-        "INSERT INTO projects (id, name) VALUES (?, ?)",
-        [project.id, project.name],
-        (err) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(project);
-          }
-        }
-      );
-    });
+    return this.insert(project);
   }
 
-  private toDomain(row: ProjectRow) {
+  toDomain(row: ProjectRow) {
     return new Project(row.id, row.name);
+  }
+
+  toItem(domain: Project) {
+    return {
+      id: domain.id,
+      name: domain.name,
+    };
   }
 }
 

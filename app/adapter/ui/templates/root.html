@@ -1,0 +1,47 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projects</title>
+  </head>
+  <body>
+    <div style="display: flex">
+      <div>Projects</div>
+      <button
+        onclick="document.getElementById('new-project-modal').showModal()"
+      >
+        New project
+      </button>
+    </div>
+    <dialog id="new-project-modal">
+      <form onsubmit="createProject(event)">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" />
+        <button type="submit">Create</button>
+      </form>
+    </dialog>
+    <ul>
+      <% projects.forEach(project => { %>
+      <li><a href="/projects/<%= project.id %>"><%= project.name %></a></li>
+      <% }); %>
+    </ul>
+  </body>
+  <script>
+    function createProject(event) {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const name = formData.get("name");
+
+      fetch("/projects/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+      }).then(() => {
+        window.location.reload();
+      });
+    }
+  </script>
+</html>
