@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node index.js",
-    "dev:server": "nodemon --watch ./app/**/* --exec 'ts-node ./app/adapter/index.ts'",
+    "dev:server": "nodemon --watch ./app --exec 'ts-node ./app/adapter/index.ts'",
     "dev:tailwind": "npx tailwindcss -i ./app/adapter/ui/stylesheets/tailwind-input.css -o ./app/adapter/ui/stylesheets/tailwind.css --watch",
     "migrate": "ts-node ./app/infrastructure/migrations/migrate.ts"
   },

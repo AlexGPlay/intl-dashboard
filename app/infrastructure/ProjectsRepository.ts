@@ -10,7 +10,7 @@ class ProjectsRepository extends SqliteRepository<ProjectRow, Project> {
   tableName = "projects";
 
   getProjects(): Promise<Project[]> {
-    return this.getAll();
+    return this.findAll();
   }
 
   getProjectById(id: string): Promise<Project | null> {

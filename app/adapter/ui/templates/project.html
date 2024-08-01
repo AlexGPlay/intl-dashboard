@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/public/tailwind.css" />
+    <title><%= project.name %></title>
+  </head>
+  <body class="p-5">
+    <div class="flex">
+      <h1 class="text-3xl font-bold mr-5"><%= project.name %></h1>
+      <button class="btn-primary" onClick="newTranslationKeyModal.showModal()">
+        New translation key
+      </button>
+    </div>
+
+    <div>
+      <% translationKeys.forEach(({ key, translations }) => { %>
+      <div><%= key %></div>
+      <div><%= JSON.stringify(translations) %></div>
+      <% }) %>
+    </div>
+
+    <!-- Create new key dialog -->
+
+    <dialog id="newTranslationKeyModal" class="min-w-96">
+      <form action="/translation_key/create" method="post">
+        <input
+          class="hidden"
+          id="projectId"
+          name="projectId"
+          value="<%= project.id %>"
+        />
+        <div>
+          <label for="translationKey">Translation key</label>
+        </div>
+        <div>
+          <input class="w-full" id="translationKey" name="translationKey" />
+        </div>
+        <% if(defaultLanguageSetting){ %>
+        <div class="pt-5">
+          <label for="defaultTranslation"
+            >Default translation (<%=
+            formatLanguage(defaultLanguageSetting.language) %>)</label
+          >
+        </div>
+        <div>
+          <input
+            class="w-full"
+            id="defaultTranslation"
+            name="defaultTranslation"
+          />
+        </div>
+        <% } %>
+        <div class="pt-5 flex gap-2">
+          <button type="submit" class="btn-primary">Create</button>
+          <button
+            type="button"
+            class="btn-secondary"
+            onClick="newTranslationKeyModal.close()"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>

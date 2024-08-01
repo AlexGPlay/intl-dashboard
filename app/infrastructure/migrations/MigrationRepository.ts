@@ -46,6 +46,7 @@ class MigrationRepository extends SqliteRepository<
     await this.prepareMigrationsTable();
     const migrated = await this.isMigrated();
     if (!migrated) {
+      console.log(`Running migration: ${this.filename}`);
       this.run();
       this.markAsMigrated();
     }

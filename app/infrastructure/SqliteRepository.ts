@@ -1,4 +1,14 @@
 import sqlite3 from "sqlite3";
+sqlite3.verbose();
+
+type TableConstraints = {
+  primaryKeys?: string[];
+  foreignKeys?: {
+    currentTableColumn: string;
+    foreignTable: string;
+    foreignTableColumn: string;
+  }[];
+};
 
 abstract class SqliteRepository<
   DatabaseRowType extends Record<string, unknown>,
@@ -10,14 +20,40 @@ abstract class SqliteRepository<
     this.db = new sqlite3.Database("db.sqlite");
   }
 
-  createTable(tablename: string, columns: Record<string, string>) {
-    const columnsString = Object.entries(columns)
-      .map(([name, type]) => `${name} ${type}`)
-      .join(", ");
-    this.db.run(`CREATE TABLE IF NOT EXISTS ${tablename} (${columnsString})`);
+  createTable(
+    tablename: string,
+    columns: Record<string, string>,
+    { primaryKeys = [], foreignKeys = [] }: TableConstraints = {
+      primaryKeys: [],
+      foreignKeys: [],
+    }
+  ) {
+    const parsedColumns = Object.entries(columns).map(
+      ([name, type]) => `${name} ${type}`
+    );
+
+    const parsedForeignKeys = foreignKeys.map(
+      ({ currentTableColumn, foreignTable, foreignTableColumn }) => {
+        return `FOREIGN KEY(${currentTableColumn}) REFERENCES ${foreignTable}(${foreignTableColumn})`;
+      }
+    );
+
+    const creationArray = [];
+
+    creationArray.push(...parsedColumns);
+    if (primaryKeys.length > 0) {
+      const parsedPrimaryKeys = `PRIMARY KEY(${primaryKeys.join(", ")})`;
+      creationArray.push(parsedPrimaryKeys);
+    }
+    creationArray.push(...parsedForeignKeys);
+
+    const creationString = creationArray.join(", ");
+
+    const sql = `CREATE TABLE IF NOT EXISTS ${tablename} (${creationString})`;
+    this.db.run(sql);
   }
 
-  selectMany(sql: string, params?: unknown[]): Promise<DomainType[]> {
+  findMany(sql: string, params?: unknown[]): Promise<DomainType[]> {
     return new Promise((resolve, reject) => {
       this.db.all<DatabaseRowType>(sql, params, (err, rows) => {
         if (err) {
@@ -29,8 +65,8 @@ abstract class SqliteRepository<
     });
   }
 
-  getAll(): Promise<DomainType[]> {
-    return this.selectMany(`SELECT * FROM ${this.tableName}`);
+  findAll(): Promise<DomainType[]> {
+    return this.findMany(`SELECT * FROM ${this.tableName}`);
   }
 
   getOne(sql: string, params?: unknown[]): Promise<DomainType | null> {

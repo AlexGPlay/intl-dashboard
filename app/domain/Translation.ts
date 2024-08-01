@@ -1,10 +1,12 @@
 class Translation {
-  key: string;
-  values: Record<string, string>;
+  translationKey: string;
+  language: string;
+  text: string;
 
-  constructor(key: string, values: Record<string, string>) {
-    this.key = key;
-    this.values = values;
+  constructor(translationKey: string, language: string, text: string) {
+    this.translationKey = translationKey;
+    this.language = language;
+    this.text = text;
   }
 }
 
