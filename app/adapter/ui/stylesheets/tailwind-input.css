@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  input {
+    @apply border-2 border-black rounded-md;
+  }
+
+  dialog {
+    @apply p-5 border-[1px] border-black rounded-md;
+  }
+
+  dialog::backdrop {
+    backdrop-filter: blur(4px);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply border-blue-500 bg-blue-500 text-white border-2 rounded-md pl-2 pr-2;
+  }
+
+  .btn-secondary {
+    @apply border-blue-500 bg-white text-blue-500 border-2 rounded-md pl-2 pr-2;
+  }
+
+  .btn-tertiary {
+    @apply border-gray-500 bg-white text-gray-500 border-2 rounded-md pl-2 pr-2;
+  }
+}

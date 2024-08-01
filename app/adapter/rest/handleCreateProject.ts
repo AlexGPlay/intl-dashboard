@@ -4,7 +4,11 @@ import ProjectsCommandService from "../../application/ProjectsCommandService";
 export function fastifyHandler(server: FastifyInstance) {
   server.post("/projects/create", async (request, reply) => {
     const { name } = request.body as { name: string };
-    const project = await ProjectsCommandService.createProject(name);
-    return { id: project.id };
+    if (!name) {
+      return reply.code(400).send({ error: "Name is required" });
+    }
+
+    await ProjectsCommandService.createProject(name);
+    return reply.redirect("/");
   });
 }

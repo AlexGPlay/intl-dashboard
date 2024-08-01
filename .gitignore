@@ -131,3 +131,6 @@ dist
 
 # sqlite
 *.sqlite
+
+# tailwind output
+tailwind.css

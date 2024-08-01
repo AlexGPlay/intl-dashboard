@@ -4,9 +4,11 @@ import LanguageSettingCommandService from "../../application/LanguageSettingsCom
 export function fastifyHandler(server: FastifyInstance) {
   server.post("/language_settings/create", async (request, reply) => {
     const { language } = request.body as { language: string };
-    const languageSetting = await LanguageSettingCommandService.create(
-      language
-    );
-    return { language: languageSetting.language };
+    if (!language) {
+      return reply.code(400).send({ error: "Language is required" });
+    }
+
+    await LanguageSettingCommandService.create(language);
+    return reply.redirect("/settings");
   });
 }

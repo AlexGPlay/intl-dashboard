@@ -10,10 +10,20 @@ export function fastifyHandler(server: FastifyInstance) {
     const languageNameFormatter = new Intl.DisplayNames(["en"], {
       type: "language",
     });
+    const formatLanguage = (language: undefined | null | string) => {
+      if (!language) {
+        return "-";
+      }
+      try {
+        return languageNameFormatter.of(language);
+      } catch (e) {
+        return language;
+      }
+    };
 
     replyWithHtml(reply, "settings.html", {
       languageSettings,
-      languageNameFormatter,
+      formatLanguage,
     });
   });
 }

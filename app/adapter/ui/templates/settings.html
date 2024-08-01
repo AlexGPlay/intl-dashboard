@@ -3,70 +3,62 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/public/index.css" />
+    <link rel="stylesheet" href="/public/tailwind.css" />
     <title>Settings</title>
   </head>
-  <body>
-    <h1>Settings</h1>
-    <ul>
+  <body class="p-5">
+    <div class="flex items-center">
+      <h1 class="text-3xl font-bold mr-5">Settings</h1>
+      <button
+        class="btn-primary"
+        onclick="createLanguageSettingDialog.showModal()"
+      >
+        Add new
+      </button>
+    </div>
+    <ul class="pt-5">
       <% languageSettings.forEach(setting => { %>
-      <li>
-        <%= languageNameFormatter.of(setting.language) %> <%
-        if(setting.isDefault){ %>
+      <li class="pt-2 grid grid-cols-10 gap-3">
+        <div class="text-blue-500 text-lg">
+          <%= formatLanguage(setting.language) %>
+        </div>
+        <% if(setting.isDefault){ %>
         <span>(default)</span>
         <% } else { %>
-        <button onclick="setLanguageAsDefault('<%= setting.language %>')">
-          Set as default
-        </button>
+        <form
+          action="/language_settings/<%= setting.language %>/set_default"
+          method="post"
+        >
+          <button class="btn-secondary" type="submit">Set as default</button>
+        </form>
         <% } %>
-        <button onclick="deleteLanguageSetting('<%= setting.language %>')">
+        <button
+          class="btn-tertiary"
+          onclick="deleteLanguageSetting('<%= setting.language %>')"
+        >
           Delete
         </button>
       </li>
       <% }); %>
     </ul>
-    <button
-      onclick="document.getElementById('create-language-setting-dialog').showModal()"
-    >
-      Add new
-    </button>
-    <dialog id="create-language-setting-dialog">
-      <form onsubmit="submitCreateLanguageSettingForm(event)">
-        <label for="language">Language</label>
-        <input type="text" id="language" name="language" />
-        <button type="submit">Add</button>
+    <dialog id="createLanguageSettingDialog">
+      <form action="/language_settings/create" method="post">
+        <div>
+          <label for="language">Language</label>
+        </div>
+        <div>
+          <input type="text" id="language" name="language" />
+        </div>
+        <div class="pt-5">
+          <button class="btn-primary" type="submit">Add</button>
+        </div>
       </form>
     </dialog>
   </body>
   <script>
-    function setLanguageAsDefault(language) {
-      fetch(`/language_settings/${language}/set_default`, {
-        method: "POST",
-      }).then(() => {
-        window.location.reload();
-      });
-    }
-
     function deleteLanguageSetting(language) {
       fetch(`/language_settings/${language}`, {
         method: "DELETE",
-      }).then(() => {
-        window.location.reload();
-      });
-    }
-
-    function submitCreateLanguageSettingForm(event) {
-      event.preventDefault();
-
-      const formData = new FormData(event.target);
-      const language = formData.get("language");
-
-      fetch("/language_settings/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ language }),
       }).then(() => {
         window.location.reload();
       });

@@ -1,0 +1,43 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/public/tailwind.css" />
+    <title>Projects</title>
+  </head>
+  <body class="p-5">
+    <div class="flex items-center">
+      <h1 class="text-3xl font-bold mr-5">Projects</h1>
+      <button class="btn-primary" onclick="newProjectModal.showModal()">
+        New project
+      </button>
+    </div>
+    <dialog id="newProjectModal">
+      <form class="m-0" action="/projects/create" method="post">
+        <div>
+          <label for="name">Name</label>
+        </div>
+        <div>
+          <input
+            class="border-2 border-black rounded-md"
+            type="text"
+            id="name"
+            name="name"
+          />
+        </div>
+        <div class="pt-5">
+          <button class="btn-primary" type="submit">Create</button>
+        </div>
+      </form>
+    </dialog>
+    <ul class="pt-5">
+      <% projects.forEach(project => { %>
+      <li class="pt-2">
+        <a class="text-blue-500 text-lg" href="/projects/<%= project.id %>"
+          ><%= project.name %></a
+        >
+      </li>
+      <% }); %>
+    </ul>
+  </body>
+</html>

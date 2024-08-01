@@ -7,7 +7,7 @@ export function fastifyHandler(server: FastifyInstance) {
     async (request, reply) => {
       const { language } = request.params as { language: string };
       await LanguageSettingCommandService.setLanguageSettingAsDefault(language);
-      return reply.code(204).send();
+      return reply.redirect("/settings");
     }
   );
 }
