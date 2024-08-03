@@ -112,6 +112,38 @@ abstract class SqliteRepository<
     });
   }
 
+  updateByKeysAndValues(
+    domainItem: DomainType,
+    whereColumns: Array<keyof DatabaseRowType>
+  ): Promise<DomainType> {
+    return new Promise((resolve, reject) => {
+      const item = this.toItem(domainItem);
+
+      const updateColumns = Object.keys(item).map((key) => `${key} = ?`);
+
+      const whereConditions = whereColumns.map(
+        (key) => `${key.toString()} = ?`
+      );
+
+      const updateValues = Object.values(item);
+      const whereValues = whereColumns.map((key) => item[key]);
+
+      const sql = `
+      UPDATE ${this.tableName}
+      SET ${updateColumns.join(", ")}
+      WHERE ${whereConditions.join(" AND ")}
+      `;
+
+      this.db.run(sql, [...updateValues, ...whereValues], (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(domainItem);
+        }
+      });
+    });
+  }
+
   deleteByKeyAndValue(key: string, value: unknown): Promise<void> {
     return new Promise((resolve, reject) => {
       this.db.run(

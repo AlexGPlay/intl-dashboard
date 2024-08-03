@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/public/tailwind.css" />
+    <title><%= project.name %></title>
+  </head>
+  <body class="p-5">
+    <div class="flex">
+      <h1 class="text-3xl font-bold mr-5"><%= project.name %></h1>
+      <button class="btn-primary" onClick="newTranslationKeyModal.showModal()">
+        New translation key
+      </button>
+    </div>
+
+    <div class="pt-5">
+      <% let totalTranslationIdx = 0 %> 
+      <% translationKeys.forEach(({ key, translations }, idx) => { %> 
+      <% const isLast = idx === translationKeys.length - 1 %>
+      <div
+        class="grid grid-cols-[3fr_9fr] border-t-[1px] <%= isLast ? 'border-b-[1px]' : '' %> border-solid border-gray-500"
+      >
+        <div class="p-2"><%= key %></div>
+        <div class="grid grid-cols-[2fr_7fr]">
+          <% Object.entries(translations).forEach(([language, translation], translationIdx) => { %> 
+            <% const isLastTranslation = translationIdx === Object.entries(translations).length - 1 %>
+            <% const border = isLastTranslation ? '' : 'border-b-[1px]' %> 
+            <% const bgColor = totalTranslationIdx % 2 === 0 ? 'bg-gray-100' : 'bg-white' %> 
+            <% const isDefaultLanguage = defaultLanguageSetting?.language === language %>
+            <% totalTranslationIdx += 1 %>
+          <div
+            class="bg-gray-200 p-2 border-solid border-gray-300 <%= isDefaultLanguage ? 'font-semibold	' : '' %> <%= border %>"
+          >
+            <%= formatLanguage(language) %>
+          </div>
+          <div
+            class="p-2 border-solid border-gray-300 <%= border %> <%= bgColor %>"
+            data-translationkey-id="<%= key %>"
+            data-translation-language="<%= language %>"
+            <%= translation ? "data-has-translation" : "" %>
+          >
+            <form action="/translation_key/<%= key %>/language/<%= language %>" method="post" class="hidden">
+              <input class="hidden" name="projectId" value="<%= project.id %>" />
+              <input name="text" onblur="toggleTranslationEdit('<%= key %>', '<%= language %>')" />
+              <button class="hidden" type="submit"></button>
+            </form>
+            <div onclick="toggleTranslationEdit('<%= key %>', '<%= language %>')">
+              <% if (translation) { %>
+                <%= translation %>
+              <% } else { %>
+                <div class="text-red-500">Empty</div>
+              <% } %>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+
+    <!-- Create new key dialog -->
+
+    <dialog id="newTranslationKeyModal" class="min-w-96">
+      <form action="/translation_key/create" method="post">
+        <input
+          class="hidden"
+          id="projectId"
+          name="projectId"
+          value="<%= project.id %>"
+        />
+        <div>
+          <label for="translationKey">Translation key</label>
+        </div>
+        <div>
+          <input class="w-full" id="translationKey" name="translationKey" />
+        </div>
+        <% if(defaultLanguageSetting){ %>
+        <div class="pt-5">
+          <label for="defaultTranslation">
+            Default translation (<%=formatLanguage(defaultLanguageSetting.language) %>)
+          </label>
+        </div>
+        <div>
+          <input
+            class="w-full"
+            id="defaultTranslation"
+            name="defaultTranslation"
+          />
+        </div>
+        <% } %>
+        <div class="pt-5 flex gap-2">
+          <button type="submit" class="btn-primary">Create</button>
+          <button
+            type="button"
+            class="btn-secondary"
+            onClick="newTranslationKeyModal.close()"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Scripts -->
+
+    <script>
+      function toggleTranslationEdit(translationKey, language) {
+        const parent = document.querySelector(`[data-translationkey-id=${translationKey}][data-translation-language=${language}]`)
+
+        const translationDiv = parent.querySelector('div')
+        translationDiv.classList.toggle('hidden')
+
+        const form = parent.querySelector('form')
+
+        const hasTranslation = parent.hasAttribute('data-has-translation')
+        const formInput = form.querySelector('input[name=text]')
+        if(hasTranslation){
+          formInput.value = translationDiv.innerText?.trim()
+        }
+        form.classList.toggle('hidden')
+        formInput.focus()
+      }
+    </script>
+
+  </body>
+</html>

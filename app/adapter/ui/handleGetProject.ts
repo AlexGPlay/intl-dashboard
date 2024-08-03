@@ -30,7 +30,7 @@ export function fastifyHandler(server: FastifyInstance) {
         translationKeys.map((key) => key.id)
       );
 
-    replyWithHtml(reply, "project.html", {
+    replyWithHtml(reply, "project.html.ejs", {
       project,
       defaultLanguageSetting,
       translationKeys: new TranslationKeysSerializer(

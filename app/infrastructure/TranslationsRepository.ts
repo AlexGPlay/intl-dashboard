@@ -13,12 +13,38 @@ class TranslationsRepository extends SqliteRepository<
 > {
   tableName = "translations";
 
+  async save(item: Translation) {
+    // First we check if the translation already exists
+    const existingTranslation = await this.getByTranslationKeyAndLanguage(
+      item.translationKey,
+      item.language
+    );
+    if (existingTranslation) {
+      // If it exists, we update it
+      return this.update(item);
+    } else {
+      // If it doesn't exist, we insert it
+      return this.insert(item);
+    }
+  }
+
+  update(item: Translation) {
+    return this.updateByKeysAndValues(item, ["translation_key", "language"]);
+  }
+
   findByTranslatiosnKey(translationKey: string[]): Promise<Translation[]> {
     const placeholders = translationKey.map(() => "?").join(", ");
 
     return this.findMany(
       `SELECT * FROM ${this.tableName} WHERE translation_key IN (${placeholders})`,
       translationKey
+    );
+  }
+
+  getByTranslationKeyAndLanguage(translationKey: string, language: string) {
+    return this.getOne(
+      `SELECT * FROM ${this.tableName} WHERE translation_key = ? AND language = ?`,
+      [translationKey, language]
     );
   }
 

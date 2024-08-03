@@ -5,6 +5,6 @@ import { replyWithHtml } from "./utils";
 export function fastifyHandler(server: FastifyInstance) {
   server.get("/projects", async (request, reply) => {
     const projects = await ProjectsQueryService.getProjects();
-    return replyWithHtml(reply, "projects.html", { projects });
+    return replyWithHtml(reply, "projects.html.ejs", { projects });
   });
 }

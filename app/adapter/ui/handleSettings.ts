@@ -7,7 +7,7 @@ export function fastifyHandler(server: FastifyInstance) {
     const languageSettings =
       await LanguageSettingsQueryService.getLanguageSettings();
 
-    replyWithHtml(reply, "settings.html", {
+    replyWithHtml(reply, "settings.html.ejs", {
       languageSettings,
       formatLanguage,
     });

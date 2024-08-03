@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import TranslationKeysCommandService from "../../application/TranslationKeysCommandService";
 import LanguageSettingsQueryService from "../../application/LanguageSettingsQueryService";
 import TranslationsCommandService from "../../application/TranslationsCommandService";
+import { Translation } from "../../schema";
 
 export function fastifyHandler(server: FastifyInstance) {
   server.post("/translation_key/create", async (request, reply) => {
@@ -27,11 +28,13 @@ export function fastifyHandler(server: FastifyInstance) {
         await LanguageSettingsQueryService.getDefaultLanguageSetting();
 
       if (defaultLanguageSetting) {
-        TranslationsCommandService.createTranslation(
-          translationKeyModel.id,
-          defaultLanguageSetting.language,
-          defaultTranslation
-        );
+        const schema = Translation.fromObject({
+          translationKey: translationKeyModel.id,
+          language: defaultLanguageSetting.language,
+          text: defaultTranslation,
+        });
+
+        TranslationsCommandService.createTranslation(schema);
       }
     }
 
