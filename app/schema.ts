@@ -7,6 +7,7 @@ class InvalidSchemaError extends Error {
 
 export type TranslationKey = {
   key: string;
+  description: string | null;
   // In case of missing translations, the value will be null
   translations: Record<string, string | null>;
 };

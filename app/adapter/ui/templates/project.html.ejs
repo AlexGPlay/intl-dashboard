@@ -16,12 +16,15 @@
 
     <div class="pt-5">
       <% let totalTranslationIdx = 0 %> 
-      <% translationKeys.forEach(({ key, translations }, idx) => { %> 
+      <% translationKeys.forEach(({ key, description, translations }, idx) => { %> 
       <% const isLast = idx === translationKeys.length - 1 %>
       <div
         class="grid grid-cols-[3fr_9fr] border-t-[1px] <%= isLast ? 'border-b-[1px]' : '' %> border-solid border-gray-500"
       >
-        <div class="p-2"><%= key %></div>
+        <div class="p-2">
+          <div><%= key %></div>
+          <div><%= description %></div>
+        </div>
         <div class="grid grid-cols-[2fr_7fr]">
           <% Object.entries(translations).forEach(([language, translation], translationIdx) => { %> 
             <% const isLastTranslation = translationIdx === Object.entries(translations).length - 1 %>
@@ -89,6 +92,18 @@
           />
         </div>
         <% } %>
+        <div class="pt-5">
+          <label for="description">
+            Description
+          </label>
+        </div>
+        <div>
+          <textarea
+            class="w-full resize-none"
+            id="description"
+            name="description"
+          ></textarea>
+        </div>
         <div class="pt-5 flex gap-2">
           <button type="submit" class="btn-primary">Create</button>
           <button

@@ -13,7 +13,7 @@ class LanguageSettingsRepository extends SqliteRepository<
   tableName = "language_settings";
 
   getLanguages(): Promise<LanguageSetting[]> {
-    return this.findAll();
+    return this.findAll({ orderBy: "is_default", orderDirection: "desc" });
   }
 
   getLanguageSettingByLanguage(

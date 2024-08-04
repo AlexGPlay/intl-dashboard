@@ -65,8 +65,14 @@ abstract class SqliteRepository<
     });
   }
 
-  findAll(): Promise<DomainType[]> {
-    return this.findMany(`SELECT * FROM ${this.tableName}`);
+  findAll(order?: {
+    orderBy: keyof DatabaseRowType;
+    orderDirection: "asc" | "desc";
+  }): Promise<DomainType[]> {
+    const orderString = order
+      ? `ORDER BY ${order.orderBy.toString()} ${order.orderDirection}`
+      : "";
+    return this.findMany(`SELECT * FROM ${this.tableName} ${orderString}`);
   }
 
   getOne(sql: string, params?: unknown[]): Promise<DomainType | null> {

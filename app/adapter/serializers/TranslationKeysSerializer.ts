@@ -36,12 +36,14 @@ class TranslationKeysSerializer {
     if (!translations) {
       return {
         key: translationKey.id,
+        description: translationKey.description,
         translations: {},
       };
     }
 
     return {
       key: translationKey.id,
+      description: translationKey.description,
       translations: Object.fromEntries(translations),
     };
   }
@@ -60,6 +62,7 @@ class TranslationKeysSerializer {
 
     return {
       key: translationKey.key,
+      description: translationKey.description,
       translations: formattedTranslations,
     };
   }

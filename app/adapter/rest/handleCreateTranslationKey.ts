@@ -6,9 +6,15 @@ import { Translation } from "../../schema";
 
 export function fastifyHandler(server: FastifyInstance) {
   server.post("/translation_key/create", async (request, reply) => {
-    const { projectId, translationKey, defaultTranslation } = request.body as {
+    const {
+      projectId,
+      translationKey,
+      defaultTranslation,
+      description = null,
+    } = request.body as {
       projectId: string;
       translationKey: string;
+      description?: string;
       defaultTranslation?: string;
     };
     if (!projectId || !translationKey) {
@@ -18,10 +24,11 @@ export function fastifyHandler(server: FastifyInstance) {
     }
 
     const translationKeyModel =
-      await TranslationKeysCommandService.createTranslationKey(
+      await TranslationKeysCommandService.createTranslationKey({
         translationKey,
-        projectId
-      );
+        projectId,
+        description,
+      });
 
     if (defaultTranslation) {
       const defaultLanguageSetting =
