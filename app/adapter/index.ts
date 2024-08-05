@@ -1,5 +1,6 @@
 import fastify from "fastify";
 import fastifyFormBody from "@fastify/formbody";
+import fastifyMultipart from "@fastify/multipart";
 import fs from "fs";
 import path from "path";
 
@@ -7,6 +8,7 @@ const GLOBAL_DIR = path.join(__dirname);
 
 const server = fastify({ logger: true });
 server.register(fastifyFormBody);
+server.register(fastifyMultipart);
 
 const dirQueue = [GLOBAL_DIR];
 

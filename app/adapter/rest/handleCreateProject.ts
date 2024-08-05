@@ -8,7 +8,7 @@ export function fastifyHandler(server: FastifyInstance) {
       return reply.code(400).send({ error: "Name is required" });
     }
 
-    await ProjectsCommandService.createProject(name);
-    return reply.redirect("/");
+    const { id } = await ProjectsCommandService.createProject(name);
+    return reply.redirect(`/projects/${id}`);
   });
 }

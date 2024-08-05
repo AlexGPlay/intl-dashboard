@@ -9,9 +9,14 @@
   <body class="p-5">
     <div class="flex">
       <h1 class="text-3xl font-bold mr-5"><%= project.name %></h1>
-      <button class="btn-primary" onClick="newTranslationKeyModal.showModal()">
+      <button class="btn-primary mr-5" onClick="newTranslationKeyModal.showModal()">
         New translation key
       </button>
+      <a class="h-100" href="/projects/<%= project.id %>/upload">
+        <button class="btn-secondary">
+          Upload base language
+        </button>
+      </a>
     </div>
 
     <div class="pt-5">
@@ -121,7 +126,7 @@
 
     <script>
       function toggleTranslationEdit(translationKey, language) {
-        const parent = document.querySelector(`[data-translationkey-id=${translationKey}][data-translation-language=${language}]`)
+        const parent = document.querySelector(`[data-translationkey-id='${translationKey}'][data-translation-language='${language}']`)
 
         const translationDiv = parent.querySelector('div')
         translationDiv.classList.toggle('hidden')

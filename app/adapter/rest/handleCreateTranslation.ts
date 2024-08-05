@@ -16,6 +16,7 @@ export function fastifyHandler(server: FastifyInstance) {
       };
 
       const translationSchema = Translation.fromObject({
+        projectId,
         translation_key,
         language,
         text,

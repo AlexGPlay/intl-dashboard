@@ -95,24 +95,39 @@ abstract class SqliteRepository<
     ]);
   }
 
-  insert(domainItem: DomainType): Promise<DomainType> {
-    return new Promise((resolve, reject) => {
-      const item = this.toItem(domainItem);
-      const entries = Object.entries(item);
+  async insert(domainItem: DomainType): Promise<DomainType> {
+    const inserted = await this.insertMany([domainItem]);
+    return inserted[0];
+  }
 
-      const columns = entries.map(([key]) => key).join(", ");
-      const values = entries.map(([_, value]) => value);
+  insertMany(domainItems: DomainType[]): Promise<DomainType[]> {
+    return new Promise((resolve, reject) => {
+      const firstItem = this.toItem(domainItems[0]);
+      const columns = Object.entries(firstItem)
+        .map(([key]) => key)
+        .join(", ");
+
+      const valuePlaceholders: string[] = [];
+      const values: unknown[] = [];
+
+      for (let domainItem of domainItems) {
+        const item = this.toItem(domainItem);
+        const entries = Object.entries(item);
+
+        valuePlaceholders.push(`(${entries.map(() => "?").join(", ")})`);
+        values.push(...entries.map(([_, value]) => value));
+      }
 
       const sql = `
         INSERT INTO ${this.tableName} (${columns})
-        VALUES (${entries.map(() => "?").join(", ")})
+        VALUES ${valuePlaceholders.join(", ")}
       `;
 
       this.db.run(sql, values, (err) => {
         if (err) {
           reject(err);
         } else {
-          resolve(domainItem);
+          resolve(domainItems);
         }
       });
     });

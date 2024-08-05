@@ -6,7 +6,7 @@ import path from "path";
 export function replyWithHtml(
   reply: FastifyReply,
   templatePath: string,
-  templateData: Record<string, unknown>
+  templateData: Record<string, unknown> = {}
 ) {
   const filePath = path.join(__dirname, "templates", templatePath);
   const htmlData = fs.readFileSync(filePath, "utf8");

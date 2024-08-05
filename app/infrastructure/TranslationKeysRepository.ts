@@ -20,6 +20,18 @@ class TranslationKeysRepository extends SqliteRepository<
     );
   }
 
+  findByProjectIdAndKeys(
+    projectId: string,
+    keys: string[]
+  ): Promise<TranslationKey[]> {
+    const placeholders = keys.map(() => "?").join(", ");
+
+    return this.findMany(
+      `SELECT * FROM ${this.tableName} WHERE project_id = ? AND id IN (${placeholders})`,
+      [projectId, ...keys]
+    );
+  }
+
   toDomain(row: TranslationKeyRow): TranslationKey {
     return new TranslationKey(row.id, row.project_id, row.description);
   }

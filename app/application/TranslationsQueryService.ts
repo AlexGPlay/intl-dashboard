@@ -1,9 +1,28 @@
 import TranslationsRepository from "../infrastructure/TranslationsRepository";
 
 class TranslationsQueryService {
-  static getTranslationsByTranslationKeys(translationKeys: string[]) {
+  static getTranslationsByTranslationKeys(
+    projectId: string,
+    translationKeys: string[]
+  ) {
     const repository = new TranslationsRepository();
-    return repository.findByTranslatiosnKey(translationKeys);
+    return repository.findByProjectIdAndTranslationKeys(
+      projectId,
+      translationKeys
+    );
+  }
+
+  static getTranslationsByTranslationKeysAndLanguage(
+    projectId: string,
+    translationKeys: string[],
+    language: string
+  ) {
+    const repository = new TranslationsRepository();
+    return repository.findByProjectIdAndTranslationKeysAndLanguage(
+      projectId,
+      translationKeys,
+      language
+    );
   }
 }
 

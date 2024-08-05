@@ -4,7 +4,7 @@ export default class CreateTranslationKeysTable extends MigrationRepository {
   run() {
     const tableName = "translation_keys";
     const columns = {
-      id: "TEXT PRIMARY KEY",
+      id: "TEXT",
       project_id: "TEXT",
     };
 
@@ -16,6 +16,9 @@ export default class CreateTranslationKeysTable extends MigrationRepository {
       },
     ];
 
-    this.createTable(tableName, columns, { foreignKeys });
+    this.createTable(tableName, columns, {
+      foreignKeys,
+      primaryKeys: ["project_id", "id"],
+    });
   }
 }

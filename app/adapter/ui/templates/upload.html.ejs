@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/public/tailwind.css" />
+  <title><%= project.name %> - Upload</title>
+</head>
+<body class="p-5">
+  <h1 class="text-3xl font-bold mr-5"><%= project.name %></h1>
+  <form action="/projects/<%= project.id %>/upload" method="post" enctype="multipart/form-data">
+    <div>
+      <input name="file" type="file" />
+    </div>
+    <div>
+      <label>
+        Update existing translations
+        <input name="updateExisting" type="checkbox" />
+      </label>
+    </div>
+    <div>
+      <button class="btn-primary" type="submit">Upload</button>
+    </div>
+  </form>
+</body>
+</html>

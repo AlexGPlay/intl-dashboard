@@ -27,6 +27,7 @@ export function fastifyHandler(server: FastifyInstance) {
 
     const translations =
       await TranslationsQueryService.getTranslationsByTranslationKeys(
+        projectId,
         translationKeys.map((key) => key.id)
       );
 

@@ -36,6 +36,7 @@ export function fastifyHandler(server: FastifyInstance) {
 
       if (defaultLanguageSetting) {
         const schema = Translation.fromObject({
+          projectId,
           translationKey: translationKeyModel.id,
           language: defaultLanguageSetting.language,
           text: defaultTranslation,
